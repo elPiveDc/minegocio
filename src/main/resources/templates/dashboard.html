@@ -13,6 +13,8 @@
     />
   </head>
   <body class="bg-light">
+    <!-- Header con logo y navbar -->
+    <div th:replace="fragments/header :: header"></div>
     <div class="container py-5">
       <div class="text-center mb-4">
         <h2><i class="bi bi-graph-up-arrow"></i> Panel Principal</h2>
@@ -43,5 +45,8 @@
         </div>
       </div>
     </div>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
   </body>
 </html>

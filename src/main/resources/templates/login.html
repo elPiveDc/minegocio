@@ -13,6 +13,9 @@
     />
   </head>
   <body class="bg-light">
+    <!-- Header con logo y navbar -->
+    <div th:replace="fragments/header :: header"></div>
+
     <div class="container mt-5">
       <div class="row justify-content-center">
         <div class="col-md-6">
@@ -68,5 +71,8 @@
         </div>
       </div>
     </div>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
   </body>
 </html>
