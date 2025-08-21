@@ -12,65 +12,69 @@
       rel="stylesheet"
     />
   </head>
-  <body class="bg-light">
+  <body class="d-flex flex-column min-vh-100 bg-light">
     <!-- Header con logo y navbar -->
     <div th:replace="fragments/header :: header"></div>
 
-    <div class="container mt-5">
-      <div class="row justify-content-center">
-        <div class="col-md-6">
-          <div class="card shadow p-4">
-            <h3 class="text-center mb-4">
-              <i class="bi bi-person-circle"></i> Iniciar Sesión
-            </h3>
-            <form action="/dashboard" method="get">
-              <div class="mb-3">
-                <label for="franquicia" class="form-label"
-                  >Nombre de la Franquicia</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="franquicia"
-                  name="franquicia"
-                  required
-                />
+    <main class="flex-grow-1">
+      <div class="container py-5">
+        <div class="container mt-5">
+          <div class="row justify-content-center">
+            <div class="col-md-6">
+              <div class="card shadow p-4">
+                <h3 class="text-center mb-4">
+                  <i class="bi bi-person-circle"></i> Iniciar Sesión
+                </h3>
+                <form action="/dashboard" method="get">
+                  <div class="mb-3">
+                    <label for="franquicia" class="form-label"
+                      >Nombre de la Franquicia</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="franquicia"
+                      name="franquicia"
+                      required
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="usuario" class="form-label">Usuario</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="usuario"
+                      name="usuario"
+                      required
+                    />
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="password"
+                      name="password"
+                      required
+                    />
+                  </div>
+
+                  <button type="submit" class="btn btn-primary w-100">
+                    Ingresar
+                  </button>
+                </form>
+
+                <div class="text-center mt-3">
+                  <a href="/" class="text-decoration-none">Volver al inicio</a>
+                </div>
               </div>
-
-              <div class="mb-3">
-                <label for="usuario" class="form-label">Usuario</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="usuario"
-                  name="usuario"
-                  required
-                />
-              </div>
-
-              <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input
-                  type="password"
-                  class="form-control"
-                  id="password"
-                  name="password"
-                  required
-                />
-              </div>
-
-              <button type="submit" class="btn btn-primary w-100">
-                Ingresar
-              </button>
-            </form>
-
-            <div class="text-center mt-3">
-              <a href="/" class="text-decoration-none">Volver al inicio</a>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </main>
 
     <!-- Footer -->
     <div th:replace="fragments/footer :: footer"></div>

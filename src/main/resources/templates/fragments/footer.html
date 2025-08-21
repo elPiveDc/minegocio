@@ -1,12 +1,12 @@
 <!-- templates/fragments/footer.html -->
-<footer class="bg-dark text-white pt-5 pb-3 mt-5" th:fragment="footer">
+<footer class="bg-dark text-white pt-5 pb-3" th:fragment="footer">
   <div class="container text-center text-md-start">
     <div class="row">
       <!-- Logo y descripción -->
-      <div class="col-md-4 mb-4">
+      <div class="col-12 col-md-4 mb-4">
         <a
           th:href="@{/}"
-          class="navbar-brand d-flex align-items-center text-decoration-none"
+          class="navbar-brand d-flex align-items-center justify-content-center justify-content-md-start text-decoration-none"
         >
           <img
             th:src="@{/img/image.png}"
@@ -16,14 +16,14 @@
           />
           <span class="fw-bold fs-4 text-primary mb-0">MiNegocio</span>
         </a>
-        <p class="text-light">
+        <p class="text-light mt-3">
           Plataforma de gestión de franquicias. Simplifica la administración y
           centraliza tu operación desde un solo lugar.
         </p>
       </div>
 
       <!-- Enlaces rápidos -->
-      <div class="col-md-4 mb-4">
+      <div class="col-12 col-md-4 mb-4">
         <h6 class="text-uppercase fw-bold mb-3">Enlaces</h6>
         <ul class="list-unstyled">
           <li>
@@ -51,7 +51,7 @@
       </div>
 
       <!-- Contacto y redes -->
-      <div class="col-md-4 mb-4">
+      <div class="col-12 col-md-4 mb-4">
         <h6 class="text-uppercase fw-bold mb-3">Contacto</h6>
         <p class="text-light mb-1">
           <i class="bi bi-envelope me-2"></i>soporte@minegocio.com

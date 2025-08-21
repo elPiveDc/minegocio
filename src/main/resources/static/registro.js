@@ -1,68 +1,44 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const steps = document.querySelectorAll(".form-step");
-  const progressItems = document.querySelectorAll(".step-item");
+// /src/main/resources/static/registro.js
+document.addEventListener("DOMContentLoaded", function () {
+  const carouselElement = document.getElementById("registroCarousel");
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
-  let currentStep = 0;
+  const finishBtn = document.getElementById("finishBtn");
+  const progressBar = document.getElementById("progressBar");
 
-  function updateStep() {
-    steps.forEach((step, i) => {
-      step.classList.toggle("active", i === currentStep);
-    });
-
-    progressItems.forEach((item, i) => {
-      item.classList.remove("active", "completed");
-      if (i < currentStep) {
-        item.classList.add("completed");
-      } else if (i === currentStep) {
-        item.classList.add("active");
-      }
-    });
-
-    prevBtn.disabled = currentStep === 0;
-    if (currentStep === steps.length - 1) {
-      nextBtn.textContent = "Finalizar Registro";
-      nextBtn.type = "submit";
-    } else {
-      nextBtn.textContent = "Siguiente →";
-      nextBtn.type = "button";
-    }
-  }
-
-  window.nextStep = () => {
-    if (currentStep < steps.length - 1) {
-      currentStep++;
-      updateStep();
-    }
-  };
-
-  window.prevStep = () => {
-    if (currentStep > 0) {
-      currentStep--;
-      updateStep();
-    }
-  };
-
-  // Permitir click en pasos anteriores
-  progressItems.forEach((item) => {
-    item.addEventListener("click", () => {
-      const step = parseInt(item.getAttribute("data-step"));
-      if (step <= currentStep) {
-        currentStep = step;
-        updateStep();
-      }
-    });
+  // Asegura instancia (no inicia autoplay ni nada)
+  const carousel = bootstrap.Carousel.getOrCreateInstance(carouselElement, {
+    interval: false,
+    wrap: false,
   });
 
-  updateStep();
-});
+  const items = carouselElement.querySelectorAll(".carousel-item");
 
-nextBtn.addEventListener("click", () => {
-  if (nextBtn.type === "button") {
-    nextStep();
+  function updateUI(index) {
+    const isFirst = index === 0;
+    const isLast = index === items.length - 1;
+
+    prevBtn.classList.toggle("d-none", isFirst);
+    nextBtn.classList.toggle("d-none", isLast);
+    finishBtn.classList.toggle("d-none", !isLast);
+
+    const percent = ((index + 1) / items.length) * 100;
+    progressBar.style.width = `${percent}%`;
+    progressBar.setAttribute("aria-valuenow", String(Math.round(percent)));
   }
-});
 
-prevBtn.addEventListener("click", () => {
-  prevStep();
+  // Estado inicial
+  const initialIndex =
+    Array.from(items).findIndex((it) => it.classList.contains("active")) || 0;
+  updateUI(initialIndex);
+
+  // Cada vez que termine el slide, actualizo UI
+  carouselElement.addEventListener("slid.bs.carousel", (e) => {
+    // e.to es el índice del slide activo
+    const idx =
+      typeof e.to === "number"
+        ? e.to
+        : Array.from(items).findIndex((it) => it.classList.contains("active"));
+    updateUI(idx);
+  });
 });

@@ -2,38 +2,46 @@
 <header class="shadow-sm" th:fragment="header">
   <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
     <div class="container">
-      <!-- Logo + texto como enlace a la página principal -->
-      <a
-        th:href="@{/}"
-        class="navbar-brand d-flex align-items-center text-decoration-none"
-      >
-        <img
-          th:src="@{/img/image.png}"
-          alt="Logo MiNegocio"
-          width="50"
-          class="me-2"
-        />
-        <span class="fw-bold fs-4 text-primary mb-0">MiNegocio</span>
-      </a>
+      <!-- Logo + Botón hamburguesa en la misma fila -->
+      <div class="d-flex w-100 justify-content-between align-items-center">
+        <!-- Logo -->
+        <a
+          th:href="@{/}"
+          class="navbar-brand d-flex align-items-center text-decoration-none"
+        >
+          <img
+            th:src="@{/img/image.png}"
+            alt="Logo MiNegocio"
+            width="50"
+            class="me-2"
+          />
+          <span class="fw-bold fs-4 text-primary mb-0">MiNegocio</span>
+        </a>
 
-      <!-- Botón para colapsar en móvil -->
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarNav"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
+        <!-- Botón hamburguesa -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      </div>
 
-      <!-- Menú de navegación -->
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto align-items-center">
+      <!-- Menú colapsable -->
+      <div class="collapse navbar-collapse mt-3 mt-lg-0" id="navbarNav">
+        <ul
+          class="navbar-nav ms-auto w-100 justify-content-start justify-content-lg-end align-items-start align-items-lg-center gap-2 gap-lg-0"
+        >
           <li class="nav-item">
-            <a class="nav-link" th:href="@{/registro}">Registro</a>
+            <a class="nav-link fw-semibold" th:href="@{/registro}">Registro</a>
           </li>
           <li class="nav-item">
-            <a class="btn btn-primary ms-lg-3" th:href="@{/login}">
+            <a class="btn btn-primary ms-lg-3 mt-2 mt-lg-0" th:href="@{/login}">
               Iniciar Sesión
             </a>
           </li>
