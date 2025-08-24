@@ -17,8 +17,8 @@
           <span class="fw-bold fs-4 text-primary mb-0">MiNegocio</span>
         </a>
         <p class="text-light mt-3">
-          Plataforma de gestión de franquicias. Simplifica la administración y
-          centraliza tu operación desde un solo lugar.
+          Plataforma de gestión de Franquicia/Negocio. Simplifica la
+          administración y centraliza tu operación desde un solo lugar.
         </p>
       </div>
 
@@ -29,21 +29,30 @@
           <li>
             <a
               th:href="@{/}"
-              class="text-white text-decoration-none d-block mb-2 link-footer"
+              class="text-white text-decoration-none d-block mb-2"
+              style="transition: all 0.3s ease"
+              onmouseover="this.style.transform='translateX(5px)'; this.style.color='#0d6efd';"
+              onmouseout="this.style.transform='translateX(0)'; this.style.color='white';"
               >Inicio</a
             >
           </li>
           <li>
             <a
               th:href="@{/registro}"
-              class="text-white text-decoration-none d-block mb-2 link-footer"
+              class="text-white text-decoration-none d-block mb-2"
+              style="transition: all 0.3s ease"
+              onmouseover="this.style.transform='translateX(5px)'; this.style.color='#0d6efd';"
+              onmouseout="this.style.transform='translateX(0)'; this.style.color='white';"
               >Registro</a
             >
           </li>
           <li>
             <a
               th:href="@{/login}"
-              class="text-white text-decoration-none d-block link-footer"
+              class="text-white text-decoration-none d-block"
+              style="transition: all 0.3s ease"
+              onmouseover="this.style.transform='translateX(5px)'; this.style.color='#0d6efd';"
+              onmouseout="this.style.transform='translateX(0)'; this.style.color='white';"
               >Iniciar Sesión</a
             >
           </li>
@@ -60,16 +69,38 @@
           <i class="bi bi-phone me-2"></i>+51 999 999 999
         </p>
         <div>
-          <a href="#" class="text-white me-3 fs-5"
+          <a
+            href="#"
+            class="text-white me-3 fs-5 d-inline-block"
+            style="transition: transform 0.3s ease"
+            onmouseover="this.style.transform='scale(1.2)'"
+            onmouseout="this.style.transform='scale(1)'"
             ><i class="bi bi-facebook"></i
           ></a>
-          <a href="#" class="text-white me-3 fs-5"
+          <a
+            href="#"
+            class="text-white me-3 fs-5 d-inline-block"
+            style="transition: transform 0.3s ease"
+            onmouseover="this.style.transform='scale(1.2)'"
+            onmouseout="this.style.transform='scale(1)'"
             ><i class="bi bi-twitter"></i
           ></a>
-          <a href="#" class="text-white me-3 fs-5"
+          <a
+            href="#"
+            class="text-white me-3 fs-5 d-inline-block"
+            style="transition: transform 0.3s ease"
+            onmouseover="this.style.transform='scale(1.2)'"
+            onmouseout="this.style.transform='scale(1)'"
             ><i class="bi bi-instagram"></i
           ></a>
-          <a href="#" class="text-white fs-5"><i class="bi bi-linkedin"></i></a>
+          <a
+            href="#"
+            class="text-white fs-5 d-inline-block"
+            style="transition: transform 0.3s ease"
+            onmouseover="this.style.transform='scale(1.2)'"
+            onmouseout="this.style.transform='scale(1)'"
+            ><i class="bi bi-linkedin"></i
+          ></a>
         </div>
       </div>
     </div>

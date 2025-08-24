@@ -13,6 +13,7 @@
       rel="stylesheet"
     />
   </head>
+
   <body class="d-flex flex-column min-vh-100 bg-light">
     <!-- Header -->
     <div th:replace="fragments/header :: header"></div>
@@ -21,67 +22,102 @@
       <div class="container py-5">
         <!-- Título y descripción -->
         <div class="text-center mb-5">
-          <h1 class="display-5 fw-bold">MiNegocio</h1>
-          <p class="lead">
-            Plataforma para gestión y administración de franquicias. Desde aquí
-            puedes crear tu franquicia, gestionar usuarios y configurar tus
-            conexiones de base de datos de forma simple y centralizada.
+          <h1
+            class="display-4 fw-bold mb-3 animate__animated animate__fadeInDown"
+          >
+            Bienvenido a <span class="text-primary">MiNegocio</span>
+          </h1>
+          <p class="lead mx-auto" style="max-width: 800px">
+            Plataforma para crear y gestionar tu franquicia o negocio de forma
+            sencilla, segura y centralizada. Administra usuarios, bases de datos
+            y más desde un solo lugar.
           </p>
         </div>
 
         <!-- Tarjetas de acciones principales -->
         <div class="row justify-content-center gy-4">
           <div class="col-12 col-md-6 col-lg-5">
-            <div class="card shadow-sm p-4 text-center h-100">
-              <i class="bi bi-shop display-4 text-success mb-3"></i>
-              <h5>¿No tienes una franquicia?</h5>
+            <div
+              class="card shadow-lg p-4 text-center h-100 border-0 transition hover-shadow"
+              style="transition: transform 0.3s ease"
+              onmouseover="this.style.transform='scale(1.03)'"
+              onmouseout="this.style.transform='scale(1)'"
+            >
+              <i class="bi bi-shop display-3 text-success mb-3"></i>
+              <h5 class="fw-semibold">¿No tienes una Franquicia?</h5>
               <p>
-                Crea tu franquicia desde cero y configura el usuario principal,
-                además de la conexión con la base de datos.
+                Crea tu Franquicia o Negocio desde cero, configura tu usuario
+                principal y conecta tu base de datos fácilmente.
               </p>
-              <a href="/registro" class="btn btn-success w-100 mt-2">
-                Crear Nueva Franquicia
+              <a href="/registro" class="btn btn-success mt-2">
+                Crear Franquicia/Negocio
               </a>
             </div>
           </div>
 
           <div class="col-12 col-md-6 col-lg-5">
-            <div class="card shadow-sm p-4 text-center h-100">
+            <div
+              class="card shadow-lg p-4 text-center h-100 border-0 transition hover-shadow"
+              style="transition: transform 0.3s ease"
+              onmouseover="this.style.transform='scale(1.03)'"
+              onmouseout="this.style.transform='scale(1)'"
+            >
               <i
-                class="bi bi-person-check-fill display-4 text-primary mb-3"
+                class="bi bi-person-check-fill display-3 text-primary mb-3"
               ></i>
-              <h5>¿Ya tienes una franquicia?</h5>
+              <h5 class="fw-semibold">¿Ya tienes una Franquicia?</h5>
               <p>
-                Ingresa con el nombre de tu franquicia, tu usuario y contraseña
-                para acceder al sistema.
+                Ingresa con tu usuario, contraseña y el nombre de tu franquicia
+                para acceder a todas las funcionalidades.
               </p>
-              <a href="/login" class="btn btn-primary w-100 mt-2">
-                Iniciar Sesión
-              </a>
+              <a href="/login" class="btn btn-primary mt-2"> Iniciar Sesión </a>
             </div>
           </div>
         </div>
 
         <!-- Características -->
-        <div class="row text-center mt-5 gy-4">
-          <h4 class="mb-4">¿Qué puedes hacer con MiNegocio?</h4>
+        <div class="text-center mt-5">
+          <h4 class="fw-bold mb-4">¿Qué puedes hacer con MiNegocio?</h4>
 
-          <div class="col-12 col-md-4">
-            <i class="bi bi-person-plus-fill display-4 text-info"></i>
-            <h6 class="mt-2">Crear Usuarios</h6>
-            <p>Agrega usuarios con distintos roles para tu franquicia.</p>
-          </div>
+          <div class="row gy-4">
+            <div class="col-12 col-md-4">
+              <div
+                class="p-4 bg-white rounded-3 shadow-sm h-100 transition"
+                style="transition: transform 0.3s ease"
+                onmouseover="this.style.transform='translateY(-5px)'"
+                onmouseout="this.style.transform='translateY(0)'"
+              >
+                <i class="bi bi-person-plus-fill display-4 text-info"></i>
+                <h6 class="mt-3 fw-semibold">Crear Usuarios</h6>
+                <p>Agrega usuarios con distintos roles para tu franquicia.</p>
+              </div>
+            </div>
 
-          <div class="col-12 col-md-4">
-            <i class="bi bi-database-gear display-4 text-warning"></i>
-            <h6 class="mt-2">Configurar Bases de Datos</h6>
-            <p>Asocia y configura la base de datos de tu franquicia.</p>
-          </div>
+            <div class="col-12 col-md-4">
+              <div
+                class="p-4 bg-white rounded-3 shadow-sm h-100 transition"
+                style="transition: transform 0.3s ease"
+                onmouseover="this.style.transform='translateY(-5px)'"
+                onmouseout="this.style.transform='translateY(0)'"
+              >
+                <i class="bi bi-database-gear display-4 text-warning"></i>
+                <h6 class="mt-3 fw-semibold">Configurar BD</h6>
+                <p>Asocia y configura la base de datos de tu franquicia.</p>
+              </div>
+            </div>
 
-          <div class="col-12 col-md-4">
-            <i class="bi bi-bar-chart-line-fill display-4 text-danger"></i>
-            <h6 class="mt-2">Ver Dashboard</h6>
-            <p>Revisa estadísticas, accesos y usuarios activos.</p>
+            <div class="col-12 col-md-4">
+              <div
+                class="p-4 bg-white rounded-3 shadow-sm h-100 transition"
+                style="transition: transform 0.3s ease"
+                onmouseover="this.style.transform='translateY(-5px)'"
+                onmouseout="this.style.transform='translateY(0)'"
+              >
+                <i class="bi bi-bar-chart-line-fill display-4 text-danger"></i>
+                <h6 class="mt-3 fw-semibold">Ver Dashboard</h6>
+                <p>Consulta estadísticas, accesos y usuarios activos.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
