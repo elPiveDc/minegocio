@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Configuración de Base de Datos - MiNegocio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+</head>
+
+<body class="bg-light">
+    <!-- Header -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <div class="container py-4">
+        <h2 class="text-center mb-4">
+            <i class="bi bi-database-check"></i> Configuración de la Base de Datos
+        </h2>
+
+        <!-- Botones de navegación -->
+        <ul class="nav nav-pills justify-content-center mb-4" id="dbTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab-tablas" data-bs-toggle="pill" data-bs-target="#contenido-tablas"
+                    type="button" role="tab" aria-controls="contenido-tablas" aria-selected="true">Crear Tablas</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-consultas" data-bs-toggle="pill" data-bs-target="#contenido-consultas"
+                    type="button" role="tab" aria-controls="contenido-consultas" aria-selected="false">Carga de Datos y
+                    Consultas</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="tab-reportes" data-bs-toggle="pill" data-bs-target="#contenido-reportes"
+                    type="button" role="tab" aria-controls="contenido-reportes" aria-selected="false">Reportes</button>
+            </li>
+        </ul>
+
+        <!-- Contenido -->
+        <div class="tab-content p-4 bg-white shadow rounded">
+
+            <!-- Sección Crear Tablas -->
+            <div class="tab-pane fade show active" id="contenido-tablas" role="tabpanel" aria-labelledby="tab-tablas">
+                <h4 class="mb-3">Crear Tablas</h4>
+                <p><strong>Base de datos actual:</strong> <span class="text-primary">Tu base de datos</span></p>
+
+                <div class="mb-3">
+                    <label for="nombreTabla" class="form-label">Nombre de la tabla:</label>
+                    <input type="text" class="form-control" id="nombreTabla" placeholder="Ej: clientes">
+                </div>
+
+                <h5 class="mt-4">Definición de columnas</h5>
+                <table class="table table-bordered text-center align-middle" id="tablaColumnas">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Restricciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="text" class="form-control" placeholder="Nombre de columna"></td>
+                            <td>
+                                <select class="form-select">
+                                    <option>INT</option>
+                                    <option>VARCHAR(100)</option>
+                                    <option>DATE</option>
+                                    <option>BOOLEAN</option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-select">
+                                    <option>PRIMARY KEY</option>
+                                    <option>NOT NULL</option>
+                                    <option>NULL</option>
+                                    <option>UNIQUE</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="d-flex gap-2">
+                    <button class="btn btn-secondary" onclick="agregarFila()">Agregar fila</button>
+                    <button class="btn btn-danger" onclick="eliminarFila()">Eliminar fila</button>
+                    <button class="btn btn-success ms-auto">Guardar datos</button>
+                </div>
+            </div>
+
+            <!-- Sección Carga de Datos y Consultas -->
+            <div class="tab-pane fade" id="contenido-consultas" role="tabpanel" aria-labelledby="tab-consultas">
+                <h4 class="mb-3">Carga de Datos y Consultas</h4>
+                <p><strong>Base de datos actual:</strong> <span class="text-primary">Tu base de datos</span></p>
+
+                <div class="mb-3">
+                    <label for="tablaSelect" class="form-label">Selecciona una tabla:</label>
+                    <select id="tablaSelect" class="form-select">
+                        <option value="">-- Selecciona una tabla --</option>
+                        <option value="clientes">Clientes</option>
+                        <option value="productos">Productos</option>
+                        <option value="mascotas">Mascotas</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="accionSelect" class="form-label">Acción a realizar:</label>
+                    <select id="accionSelect" class="form-select" onchange="mostrarAccion()">
+                        <option value="">-- Selecciona una acción --</option>
+                        <option value="subir">Subir datos</option>
+                        <option value="consultar">Realizar consultas</option>
+                    </select>
+                </div>
+
+                <div id="accionContenido" class="mt-4"></div>
+            </div>
+
+            <!-- Sección Reportes -->
+            <div class="tab-pane fade" id="contenido-reportes" role="tabpanel" aria-labelledby="tab-reportes">
+                <h4>Reportes</h4>
+                <p>Selecciona el tipo de reporte que deseas generar.</p>
+
+                <!-- Reporte Global -->
+                <div class="mb-4 p-3 border rounded bg-light">
+                    <h5>Reporte Completo de la Base de Datos</h5>
+                    <button class="btn btn-primary">📑 Generar Reporte Completo</button>
+                </div>
+
+                <!-- Reporte Específico -->
+                <div class="mb-4 p-3 border rounded bg-light">
+                    <h5>Reporte Específico</h5>
+                    <div class="mb-3">
+                        <label for="tablaReporteSelect" class="form-label">Selecciona Tabla:</label>
+                        <select id="tablaReporteSelect" class="form-select">
+                            <option value="">-- Selecciona tabla --</option>
+                            <option value="empleados">Empleados</option>
+                            <option value="ventas">Ventas</option>
+                            <option value="inventario">Inventario</option>
+                            <option value="proveedores">Proveedores</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-outline-primary">📑 Generar Reporte Específico</button>
+                </div>
+
+                <!-- Resultado -->
+                <div id="resultadoReporte" class="mt-4"></div>
+
+            </div>
+
+        </div>
+
+    </div>
+    </div>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/db-config.js"></script>
+</body>
+
+</html>
