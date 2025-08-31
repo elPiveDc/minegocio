@@ -18,12 +18,13 @@
     <!-- Header con logo y navbar -->
     <div th:replace="fragments/header :: header"></div>
 
-    <main
-      class="flex-grow-1 d-flex justify-content-center align-items-start py-5"
-    >
+    <main class="flex-grow-1 d-flex justify-content-center align-items-start">
       <div class="container py-5">
+        <!-- Nav Basico -->
+        <div th:replace="fragments/navdashboard :: div"></div>
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h2>Usuarios</h2>
+
           <button
             class="btn btn-primary"
             data-bs-toggle="modal"

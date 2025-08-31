@@ -17,10 +17,10 @@
     <!-- Header -->
     <div th:replace="fragments/header :: header"></div>
 
-    <main
-      class="flex-grow-1 d-flex justify-content-center align-items-start py-5"
-    >
-      <div class="container py-4">
+    <main class="flex-grow-1 d-flex justify-content-center align-items-start">
+      <div class="container py-5">
+        <!-- Nav Basico -->
+        <div th:replace="fragments/navdashboard :: div"></div>
         <h2 class="text-center mb-4">
           <i class="bi bi-database-check"></i> Configuración de la Base de Datos
         </h2>
