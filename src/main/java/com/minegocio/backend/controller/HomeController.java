@@ -22,19 +22,4 @@ public class HomeController {
         return "login";
     }
 
-    @GetMapping("/dashboard")
-    public String dashboard() {
-        return "dashboard";
-    }
-
-    @GetMapping("/dashboard/usuarios")
-    public String usuarios() {
-        return "usuarios"; 
-    }
-
-    @GetMapping("/dashboard/basedatos")
-    public String basedatos() {
-        return "basedatos";
-    }
-
 }
