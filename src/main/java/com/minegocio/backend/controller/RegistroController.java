@@ -2,6 +2,7 @@ package com.minegocio.backend.controller;
 
 import com.minegocio.backend.service.RegistroService;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -20,25 +21,27 @@ public class RegistroController {
             @RequestParam String correo,
             @RequestParam String password,
             @RequestParam String nombreFranquicia,
-            @RequestParam(name = "bd") String nombreBd) {
+            @RequestParam(name = "bd") String nombreBd,
+            Model model) {
 
         try {
             registroService.registrarUsuarioConFranquicia(
-                    nombreUsuario,
-                    correo,
-                    password,
-                    nombreFranquicia,
-                    nombreBd);
+                    nombreUsuario, correo, password, nombreFranquicia, nombreBd);
 
-            // Si todo salió bien, redirige al login
-            return "redirect:/login";
+            model.addAttribute("successMessage", "Registro exitoso. Ahora puedes iniciar sesión.");
+            return "login";
 
         } catch (IllegalArgumentException e) {
-            // Si hay error de validación (por ejemplo, correo ya en uso)
-            return "redirect:/registro?error=" + e.getMessage();
+            model.addAttribute("errorMessage", e.getMessage());
         } catch (Exception e) {
-            // Si hay otro error inesperado
-            return "redirect:/registro?error=Error inesperado, intenta de nuevo.";
+            model.addAttribute("errorMessage", "Error inesperado, por favor intenta de nuevo.");
         }
+
+        model.addAttribute("nombreUsuario", nombreUsuario);
+        model.addAttribute("correo", correo);
+        model.addAttribute("nombreFranquicia", nombreFranquicia);
+        model.addAttribute("bd", nombreBd);
+
+        return "registro";
     }
 }

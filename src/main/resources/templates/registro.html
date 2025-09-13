@@ -30,6 +30,17 @@
           <i class="bi bi-gear-fill me-2"></i>Registro de una Nueva Franquicia
         </h3>
 
+        <!-- ALERTAS -->
+        <div th:if="${errorMessage}" class="alert alert-danger text-center">
+          <i class="bi bi-exclamation-triangle-fill me-2"></i>
+          <span th:text="${errorMessage}"></span>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success text-center">
+          <i class="bi bi-check-circle-fill me-2"></i>
+          <span th:text="${successMessage}"></span>
+        </div>
+
         <!-- Barra de progreso -->
         <div class="progress mb-4" style="height: 8px">
           <div
@@ -60,6 +71,7 @@
                     type="text"
                     class="form-control shadow-sm"
                     name="nombreUsuario"
+                    th:value="${nombreUsuario}"
                     required
                   />
                 </div>
@@ -69,6 +81,7 @@
                     type="email"
                     class="form-control shadow-sm"
                     name="correo"
+                    th:value="${correo}"
                     required
                   />
                 </div>
@@ -91,6 +104,7 @@
                     type="text"
                     class="form-control shadow-sm"
                     name="nombreFranquicia"
+                    th:value="${nombreFranquicia}"
                     required
                   />
                 </div>
@@ -108,6 +122,7 @@
                     type="text"
                     class="form-control shadow-sm"
                     name="bd"
+                    th:value="${bd}"
                     required
                   />
                 </div>

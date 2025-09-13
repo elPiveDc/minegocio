@@ -1,6 +1,6 @@
 package com.minegocio.backend.controller;
 
-import com.minegocio.backend.entity.Usuario;
+import com.minegocio.backend.dto.UsuarioSesion;
 import com.minegocio.backend.service.LoginService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -22,12 +22,18 @@ public class LoginController {
             @RequestParam String franquicia,
             HttpSession session) {
         try {
-            Usuario user = loginService.autenticar(usuario, password, franquicia);
+            // Validar usuario en la BD de la franquicia
+            UsuarioSesion user = loginService.autenticar(usuario, password, franquicia);
 
             // Guardar usuario en sesión
             session.setAttribute("usuarioLogueado", user);
 
-            return "redirect:/dashboard"; // redirige al dashboard único del usuario
+            // Redirigir según si es admin o no
+            if (user.isEsAdmin()) {
+                return "redirect:/dashboard";
+            } else {
+                return "redirect:/dashboard";
+            }
 
         } catch (IllegalArgumentException e) {
             return "redirect:/login?error=" + e.getMessage();
@@ -37,6 +43,6 @@ public class LoginController {
     @GetMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate();
-        return "redirect:/login";
+        return "redirect:/";
     }
 }

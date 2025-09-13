@@ -1,6 +1,6 @@
 package com.minegocio.backend.controller;
 
-import com.minegocio.backend.entity.Usuario;
+import com.minegocio.backend.dto.UsuarioSesion;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +11,7 @@ public class DashboardController {
 
     @GetMapping("/dashboard")
     public String dashboard(HttpSession session, Model model) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
+        UsuarioSesion usuario = (UsuarioSesion) session.getAttribute("usuarioLogueado");
 
         if (usuario == null) {
             return "redirect:/login";
@@ -20,8 +20,6 @@ public class DashboardController {
         model.addAttribute("usuario", usuario);
         return "dashboard";
     }
-
-    // Agregar entidades, respositorios y servicios especializados
 
     @GetMapping("/dashboard/usuarios")
     public String usuarios() {

@@ -2,7 +2,7 @@
 <header class="shadow-sm" th:fragment="header">
   <nav class="navbar navbar-expand-lg navbar-light bg-white py-3">
     <div class="container">
-      <!-- Logo y botón hamburguesa -->
+      <!-- Logo -->
       <a
         th:href="@{/}"
         class="navbar-brand d-flex align-items-center text-decoration-none"
@@ -32,30 +32,32 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <!-- Menú de navegación -->
+      <!-- Menú -->
       <div class="collapse navbar-collapse mt-3 mt-lg-0" id="navbarNav">
-        <ul
-          class="navbar-nav ms-auto w-100 justify-content-start justify-content-lg-end align-items-start align-items-lg-center gap-2 gap-lg-0"
-        >
-          <li class="nav-item">
-            <a
-              class="nav-link fw-semibold px-3"
-              th:href="@{/registro}"
-              style="transition: color 0.3s ease, transform 0.3s ease"
-              onmouseover="this.style.color='#0d6efd'; this.style.transform='translateY(-2px)'"
-              onmouseout="this.style.color=''; this.style.transform='translateY(0)'"
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-2 gap-lg-3">
+          <!-- Si NO hay sesión -->
+          <li class="nav-item" th:if="${usuarioSesion == null}">
+            <a class="nav-link fw-semibold px-3" th:href="@{/registro}"
               >Registro</a
             >
           </li>
-          <li class="nav-item">
-            <a
-              class="btn btn-primary ms-lg-3 mt-2 mt-lg-0"
-              th:href="@{/login}"
-              style="transition: all 0.3s ease"
-              onmouseover="this.style.transform='scale(1.05)'"
-              onmouseout="this.style.transform='scale(1)'"
+          <li class="nav-item" th:if="${usuarioSesion == null}">
+            <a class="btn btn-primary ms-lg-3" th:href="@{/login}"
               >Iniciar Sesión</a
             >
+          </li>
+
+          <!-- Si SÍ hay sesión -->
+          <li
+            class="nav-item d-flex align-items-center"
+            th:if="${usuarioSesion != null}"
+          >
+            <span class="nav-link fw-semibold"
+              >Hola, <span th:text="${usuarioSesion.nombre}"></span
+            ></span>
+          </li>
+          <li class="nav-item" th:if="${usuarioSesion != null}">
+            <a class="btn btn-danger ms-lg-3" th:href="@{/logout}">Salir</a>
           </li>
         </ul>
       </div>
