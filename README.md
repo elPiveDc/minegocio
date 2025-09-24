@@ -1,3 +1,25 @@
+# Gestor de Franquicias
+
+Aplicación web desarrollada en **Spring Boot (JDK 23)** con **Thymeleaf, HTML y Bootstrap**, que permite gestionar franquicias (negocios) y su configuración sobre una **base de datos MySQL centralizada**.
+
+El sistema está diseñado para administrar usuarios, franquicias y las bases de datos asociadas a cada franquicia, permitiendo la conexión con distintos motores de base de datos (MySQL, PostgreSQL, Oracle, MongoDB, Cassandra).
+
+---
+
+## Tecnologías utilizadas
+
+- **Java 23 (JDK)**
+- **Spring Boot**
+- **Thymeleaf**
+- **Bootstrap**
+- **Hibernate / JPA**
+- **MySQL 8.0+**
+
+---
+
+## Base de datos principal (script completo)
+
+```sql
 -- ============================================================
 --  BASE DE DATOS CENTRAL - OPTIMIZADA
 -- ============================================================
@@ -71,7 +93,7 @@ CREATE TABLE IF NOT EXISTS objetos_bd_franquicia (
     nombre_tabla VARCHAR(100) NOT NULL,
     tipo_objeto ENUM('TABLA','VISTA','FUNCION') DEFAULT 'TABLA',
     es_tabla_usuarios BOOLEAN DEFAULT FALSE,
-    columnas JSON NOT NULL, -- Ahora es JSON para consultas más potentes
+    columnas JSON NOT NULL,
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_by INT NULL,
     updated_by INT NULL,
@@ -82,3 +104,66 @@ CREATE TABLE IF NOT EXISTS objetos_bd_franquicia (
 ) ENGINE=InnoDB;
 
 CREATE INDEX idx_objetos_bd ON objetos_bd_franquicia(id_bd);
+```
+---
+## Configuración (application.properties)
+
+```properties
+spring.application.name=GestorFranquicias
+
+# Conexión a la base de datos principal
+spring.datasource.url=jdbc:mysql://localhost:3306/sistema_franquicias
+spring.datasource.username=tu_usuario
+spring.datasource.password=tu_password
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# Configuración JPA / Hibernate
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+
+# Desactivar seguridad por defecto de Spring
+spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+```
+## Requisitos del sistema:
+- Java 23 (JDK)
+- Maven 3+
+- Spring Boot
+- MySQL 8.0+
+- Navegador web moderno (para usar la interfaz con Thymeleaf + Bootstrap)
+
+---
+## Instalación y ejecución
+
+Clonar el repositorio:
+
+```bash
+git clone https://github.com/tu_usuario/gestor-franquicias.git
+cd gestor-franquicias
+```
+
+Crear la base de datos en MySQL ejecutando el script SQL proporcionado en este README.
+
+Configurar el archivo application.properties con tu usuario y contraseña de MySQL.
+
+Compilar y ejecutar la aplicación:
+
+```bash
+mvn spring-boot:run
+```
+
+Acceder en el navegador:
+
+http://localhost:8080
+
+---
+## Funcionalidades actuales
+
+- Registro de usuario + franquicia + BD
+- Contraseñas encriptadas con BCrypt
+- Validación de credenciales y login
+- Sesión activa con HttpSession
+- Redirección automática al dashboard
+- Desconexión con /logout
+
+
