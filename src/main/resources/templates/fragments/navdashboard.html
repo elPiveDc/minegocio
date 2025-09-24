@@ -1,0 +1,33 @@
+<!-- templates/fragments/navdashboard.html -->
+<div class="container mb-4" th:fragment="div">
+  <nav class="nav nav-pills nav-justified flex-column flex-sm-row">
+    <a
+      class="nav-link d-flex align-items-center justify-content-center gap-2"
+      href="/dashboard"
+    >
+      <i class="bi bi-house"></i>
+      <span>Inicio</span>
+    </a>
+    <a
+      class="nav-link d-flex align-items-center justify-content-center gap-2"
+      href="/dashboard/usuarios"
+    >
+      <i class="bi bi-person-gear"></i>
+      <span>Configuración Usuario</span>
+    </a>
+    <a
+      class="nav-link d-flex align-items-center justify-content-center gap-2"
+      href="/dashboard/basedatos"
+    >
+      <i class="bi bi-database"></i>
+      <span>Configuración BD</span>
+    </a>
+    <a
+      class="nav-link d-flex align-items-center justify-content-center gap-2"
+      href="/dashboard/modulos"
+    >
+      <i class="bi bi-puzzle"></i>
+      <span>Añadir Módulos</span>
+    </a>
+  </nav>
+</div>
