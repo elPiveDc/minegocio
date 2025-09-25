@@ -104,6 +104,20 @@ CREATE TABLE IF NOT EXISTS objetos_bd_franquicia (
 ) ENGINE=InnoDB;
 
 CREATE INDEX idx_objetos_bd ON objetos_bd_franquicia(id_bd);
+
+-- ============================================================
+--  TABLA: Preguntas Frecuentes
+-- ============================================================
+
+CREATE TABLE faq (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    question VARCHAR(500) NOT NULL,
+    answer TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FULLTEXT idx_faq_fulltext (question, answer)  -- aquí mismo
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 ```
 ---
 ## Configuración (application.properties)
