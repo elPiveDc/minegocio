@@ -1,186 +1,169 @@
 # Gestor de Franquicias
 
-Aplicación web desarrollada en Spring Boot (JDK 23) con Thymeleaf, HTML y Bootstrap, que permite gestionar franquicias (negocios) y su configuración sobre una base de datos MySQL.
+Aplicación web desarrollada en **Spring Boot (JDK 23)** con **Thymeleaf, HTML y Bootstrap**, que permite gestionar franquicias (negocios) y su configuración sobre una **base de datos MySQL centralizada**.
 
-Actualmente el sistema ya cuenta con registro de usuarios y franquicias con contraseñas encriptadas, así como inicio de sesión con validación en base de datos y manejo de sesión.
+El sistema está diseñado para administrar usuarios, franquicias y las bases de datos asociadas a cada franquicia, permitiendo la conexión con distintos motores de base de datos (MySQL, PostgreSQL, Oracle, MongoDB, Cassandra).
 
-Estado actual del proyecto
+---
 
-El proyecto cuenta con:
+## Tecnologías utilizadas
 
-✅ Frontend completo con HTML + Bootstrap + Thymeleaf
-✅ Registro de usuario + franquicia + base de datos asociada
-✅ Encriptación de contraseñas usando BCryptPasswordEncoder
-✅ Inicio de sesión funcional, con sesión HTTP y redirección al dashboard
-✅ Repositorios JPA para usuarios y franquicias
-✅ Controladores MVC para navegación, registro, login y dashboard
+- **Java 23 (JDK)**
+- **Spring Boot**
+- **Thymeleaf**
+- **Bootstrap**
+- **Hibernate / JPA**
+- **MySQL 8.0+**
 
-Controladores implementados
+---
 
-HomeController – Maneja navegación básica entre vistas:
+## Base de datos principal (script completo)
 
-@Controller
-public class HomeController {
-    @GetMapping("/") public String index() { return "index"; }
-    @GetMapping("/registro") public String registro() { return "registro"; }
-    @GetMapping("/login") public String login() { return "login"; }
-}
+```sql
+-- ============================================================
+--  BASE DE DATOS CENTRAL - OPTIMIZADA
+-- ============================================================
 
+-- Crear base de datos principal
+CREATE DATABASE IF NOT EXISTS sistema_franquicias
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE sistema_franquicias;
 
-RegistroController – Registra usuario, franquicia y base de datos:
+-- ============================================================
+--  TABLA: USUARIOS (DUEÑOS DE FRANQUICIA)
+-- ============================================================
+CREATE TABLE IF NOT EXISTS usuarios (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado ENUM('ACTIVO','INACTIVO','BLOQUEADO') DEFAULT 'ACTIVO'
+) ENGINE=InnoDB;
 
-@Controller
-public class RegistroController {
-    private final RegistroService registroService;
+CREATE INDEX idx_usuarios_correo ON usuarios(correo);
 
-    public RegistroController(RegistroService registroService) {
-        this.registroService = registroService;
-    }
+-- ============================================================
+--  TABLA: FRANQUICIAS
+-- ============================================================
+CREATE TABLE IF NOT EXISTS franquicias (
+    id_franquicia INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    nombre_franquicia VARCHAR(100) NOT NULL UNIQUE,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado ENUM('ACTIVA','INACTIVA','ELIMINADA') DEFAULT 'ACTIVA',
+    created_by INT NULL,
+    updated_by INT NULL,
+    updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
-    @PostMapping("/registro")
-    public String registrarUsuario(
-        @RequestParam String nombreUsuario,
-        @RequestParam String correo,
-        @RequestParam String password,
-        @RequestParam String nombreFranquicia,
-        @RequestParam(name = "bd") String nombreBd) {
+CREATE INDEX idx_franquicias_usuario ON franquicias(id_usuario);
 
-        try {
-            registroService.registrarUsuarioConFranquicia(
-                    nombreUsuario, correo, password,
-                    nombreFranquicia, nombreBd);
-            return "redirect:/login";
-        } catch (IllegalArgumentException e) {
-            return "redirect:/registro?error=" + e.getMessage();
-        } catch (Exception e) {
-            return "redirect:/registro?error=Error inesperado, intenta de nuevo.";
-        }
-    }
-}
+-- ============================================================
+--  TABLA: BASES DE DATOS DE CADA FRANQUICIA
+-- ============================================================
+CREATE TABLE IF NOT EXISTS bases_datos_franquicia (
+    id_bd INT AUTO_INCREMENT PRIMARY KEY,
+    id_franquicia INT NOT NULL,
+    nombre_bd VARCHAR(100) NOT NULL,
+    tipo_bd ENUM('MYSQL','POSTGRESQL','ORACLE','MONGODB','CASSANDRA') NOT NULL,
+    estado ENUM('CONFIGURADA','NO_CONFIGURADA','ERROR') DEFAULT 'NO_CONFIGURADA',
+    url_conexion TEXT,
+    usuario_conexion VARCHAR(100),
+    pass_conexion_hash VARCHAR(255),
+    created_by INT NULL,
+    updated_by INT NULL,
+    updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_franquicia) REFERENCES franquicias(id_franquicia)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
+CREATE INDEX idx_bd_franquicia ON bases_datos_franquicia(id_franquicia);
 
-LoginController – Autenticación con verificación de contraseña encriptada y sesión:
+-- ============================================================
+--  TABLA: OBJETOS CREADOS EN CADA BASE DE DATOS DE FRANQUICIA
+-- ============================================================
+CREATE TABLE IF NOT EXISTS objetos_bd_franquicia (
+    id_objeto INT AUTO_INCREMENT PRIMARY KEY,
+    id_bd INT NOT NULL,
+    nombre_tabla VARCHAR(100) NOT NULL,
+    tipo_objeto ENUM('TABLA','VISTA','FUNCION') DEFAULT 'TABLA',
+    es_tabla_usuarios BOOLEAN DEFAULT FALSE,
+    columnas JSON NOT NULL,
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_by INT NULL,
+    updated_by INT NULL,
+    updated_at TIMESTAMP NULL ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_bd) REFERENCES bases_datos_franquicia(id_bd)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
 
-@Controller
-public class LoginController {
-    private final LoginService loginService;
+CREATE INDEX idx_objetos_bd ON objetos_bd_franquicia(id_bd);
+```
+---
+## Configuración (application.properties)
 
-    public LoginController(LoginService loginService) {
-        this.loginService = loginService;
-    }
+```properties
+spring.application.name=GestorFranquicias
 
-    @PostMapping("/login")
-    public String login(
-            @RequestParam String usuario,
-            @RequestParam String password,
-            @RequestParam String franquicia,
-            HttpSession session) {
-        try {
-            Usuario user = loginService.autenticar(usuario, password, franquicia);
-            session.setAttribute("usuarioLogueado", user);
-            return "redirect:/dashboard";
-        } catch (IllegalArgumentException e) {
-            return "redirect:/login?error=" + e.getMessage();
-        }
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login";
-    }
-}
-
-
-DashboardController – Protege la vista, solo usuarios autenticados pueden acceder:
-
-@Controller
-public class DashboardController {
-    @GetMapping("/dashboard")
-    public String dashboard(HttpSession session, Model model) {
-        Usuario usuario = (Usuario) session.getAttribute("usuarioLogueado");
-        if (usuario == null) return "redirect:/login";
-        model.addAttribute("usuario", usuario);
-        return "dashboard";
-    }
-}
-
-Repositorios JPA
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
-    Optional<Usuario> findByCorreo(String correo);
-    boolean existsByCorreo(String correo);
-}
-
-public interface FranquiciaRepository extends JpaRepository<Franquicia, Integer> {
-    boolean existsByNombreFranquicia(String nombreFranquicia);
-}
-
-Utilidad para encriptación de contraseñas
-public class PasswordUtil {
-    private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    public static String hashPassword(String rawPassword) {
-        return passwordEncoder.encode(rawPassword);
-    }
-
-    public static boolean checkPassword(String rawPassword, String hashedPassword) {
-        return passwordEncoder.matches(rawPassword, hashedPassword);
-    }
-}
-
-Configuración (application.properties)
-
-Configuración para MySQL y Hibernate:
-
-spring.application.name=MiNegocio
-
+# Conexión a la base de datos principal
 spring.datasource.url=jdbc:mysql://localhost:3306/sistema_franquicias
-spring.datasource.username=Prueba
-spring.datasource.password=Prueba123
+spring.datasource.username=tu_usuario
+spring.datasource.password=tu_password
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
+# Configuración JPA / Hibernate
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
 
+# Desactivar seguridad por defecto de Spring
 spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+```
+## Requisitos del sistema:
+- Java 23 (JDK)
+- Maven 3+
+- Spring Boot
+- MySQL 8.0+
+- Navegador web moderno (para usar la interfaz con Thymeleaf + Bootstrap)
 
-Script SQL de la base de datos central
+---
+## Instalación y ejecución
 
-Incluye tablas de usuarios, franquicias, y configuraciones de BD (ver versión previa del README para el script completo).
+Clonar el repositorio:
 
-Requisitos del sistema
-
-Java 23 (JDK)
-
-Maven
-
-Spring Boot
-
-MySQL 8.0+
-
-Navegador web moderno (Thymeleaf + Bootstrap)
-
-Instalación y ejecución
+```bash
 git clone https://github.com/tu_usuario/gestor-franquicias.git
 cd gestor-franquicias
+```
+
+Crear la base de datos en MySQL ejecutando el script SQL proporcionado en este README.
+
+Configurar el archivo application.properties con tu usuario y contraseña de MySQL.
+
+Compilar y ejecutar la aplicación:
+
+```bash
 mvn spring-boot:run
+```
+
+Acceder en el navegador:
+
+http://localhost:8080
+
+---
+## Funcionalidades actuales
+
+- Registro de usuario + franquicia + BD
+- Contraseñas encriptadas con BCrypt
+- Validación de credenciales y login
+- Sesión activa con HttpSession
+- Redirección automática al dashboard
+- Desconexión con /logout
 
 
-Acceder en navegador: http://localhost:8080
-
-Funcionalidades actuales
-
-✅ Registro de usuario + franquicia + BD
-✅ Contraseñas encriptadas con BCrypt
-✅ Validación de credenciales y login
-✅ Sesión activa con HttpSession
-✅ Redirección automática al dashboard
-✅ Desconexión con /logout
-
-Próximos pasos
-
-🔜 Implementar manejo de errores en frontend (mensajes visibles en /login y /registro)
-🔜 CRUD completo de usuarios y franquicias desde el dashboard
-🔜 Creación dinámica de base de datos de cada franquicia
-🔜 Integración con Spring Security (roles y permisos)
