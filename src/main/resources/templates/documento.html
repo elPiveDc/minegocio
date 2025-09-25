@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title th:text="${titulo}">Documento</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="d-flex flex-column min-vh-100 bg-light">
+    <!-- Header -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="flex-grow-1">
+      <div class="container py-5">
+        <div class="text-center mb-4">
+          <h1 class="fw-bold text-primary" th:text="${titulo}">Documento</h1>
+          <p class="text-muted">
+            Aquí puedes ver o descargar el documento oficial.
+          </p>
+        </div>
+
+        <!-- Botones -->
+        <div class="text-center">
+          <a
+            th:href="@{'/documentos/' + ${slug} + '/ver'}"
+            class="btn btn-outline-primary me-2"
+            target="_blank"
+          >
+            <i class="bi bi-eye"></i> Ver en línea
+          </a>
+
+          <a
+            th:href="@{'/documentos/' + ${slug} + '/descargar'}"
+            class="btn btn-primary"
+          >
+            <i class="bi bi-download"></i> Descargar
+          </a>
+        </div>
+
+        <!-- Vista previa en iframe -->
+        <div class="mt-5">
+          <h5>Vista previa:</h5>
+          <iframe
+            th:src="@{'/documentos/' + ${slug} + '/ver'}"
+            style="
+              width: 100%;
+              height: 600px;
+              border: 1px solid #ddd;
+              border-radius: 8px;
+            "
+          >
+          </iframe>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

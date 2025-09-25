@@ -20,6 +20,7 @@ El sistema está diseñado para administrar usuarios, franquicias y las bases de
 ## Base de datos principal (script completo)
 
 ```sql
+
 -- ============================================================
 --  BASE DE DATOS CENTRAL - OPTIMIZADA
 -- ============================================================
@@ -93,7 +94,7 @@ CREATE TABLE IF NOT EXISTS objetos_bd_franquicia (
     nombre_tabla VARCHAR(100) NOT NULL,
     tipo_objeto ENUM('TABLA','VISTA','FUNCION') DEFAULT 'TABLA',
     es_tabla_usuarios BOOLEAN DEFAULT FALSE,
-    columnas JSON NOT NULL,
+    columnas JSON NOT NULL, -- Ahora es JSON para consultas más potentes
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_by INT NULL,
     updated_by INT NULL,
@@ -104,26 +105,71 @@ CREATE TABLE IF NOT EXISTS objetos_bd_franquicia (
 ) ENGINE=InnoDB;
 
 CREATE INDEX idx_objetos_bd ON objetos_bd_franquicia(id_bd);
+
+-- ============================================================
+--  TABLA: Preguntas Frecuentes
+-- ============================================================
+
+CREATE TABLE faq (
+    id_faq BIGINT AUTO_INCREMENT PRIMARY KEY,
+    question VARCHAR(500) NOT NULL,
+    answer TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FULLTEXT idx_faq_fulltext (question, answer)  -- aquí mismo
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- ============================================================
+--  TABLA: documentos
+-- ============================================================
+
+CREATE TABLE documento (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    titulo VARCHAR(255) NOT NULL,
+    slug VARCHAR(100) UNIQUE NOT NULL, -- Ej: 'terminos', 'privacidad'
+    tipo_contenido VARCHAR(100) NOT NULL, -- Ej: 'application/pdf', 'application/msword'
+    archivo LONGBLOB NOT NULL,
+    fecha_subida TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 ```
 ---
 ## Configuración (application.properties)
 
 ```properties
-spring.application.name=GestorFranquicias
 
-# Conexión a la base de datos principal
-spring.datasource.url=jdbc:mysql://localhost:3306/sistema_franquicias
-spring.datasource.username=tu_usuario
-spring.datasource.password=tu_password
+# Nombre de la aplicacion
+spring.application.name=MiNegocio
+
+# Conexion BD Central (cambiar el usuario y el pass)
+spring.datasource.url=jdbc:mysql://localhost:3306/sistema_franquicias?useSSL=false&serverTimezone=UTC
+spring.datasource.username=Prueba
+spring.datasource.password=Prueba123
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
-# Configuración JPA / Hibernate
+# Valores para conexiones dinamicas (cambiar el usuario y el pass)
+franquicia.db.host=localhost
+franquicia.db.port=3306
+franquicia.db.username=Prueba
+franquicia.db.password=Prueba123
+
+# Configuracion JPA / Hibernate
 spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
 
-# Desactivar seguridad por defecto de Spring
+# Logs mas detallados
+logging.level.org.hibernate.SQL=DEBUG
+logging.level.org.hibernate.type.descriptor.sql.BasicBinder=TRACE
+
+# Configuracion de subida de archivos
+spring.servlet.multipart.max-file-size=20MB
+spring.servlet.multipart.max-request-size=20MB
+
+# Seguridad deshabilitada
 spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+
 ```
 ## Requisitos del sistema:
 - Java 23 (JDK)

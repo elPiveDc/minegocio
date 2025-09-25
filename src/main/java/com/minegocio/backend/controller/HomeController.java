@@ -12,6 +12,7 @@ public class HomeController {
         return "index";
     }
 
+    // Enlaces (header)
     @GetMapping("/registro")
     public String registro() {
         return "registro";
@@ -20,6 +21,23 @@ public class HomeController {
     @GetMapping("/login")
     public String login() {
         return "login";
+    }
+
+    // Páginas de enlaces rápidos (footer)
+
+    @GetMapping("/libro-reclamaciones")
+    public String libroReclamaciones() {
+        return "libro-reclamaciones";
+    }
+
+    @GetMapping("/terminos")
+    public String terminos() {
+        return "terminos";
+    }
+
+    @GetMapping("/privacidad")
+    public String privacidad() {
+        return "privacidad";
     }
 
 }
