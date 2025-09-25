@@ -42,15 +42,4 @@ public class FaqController {
         return "preguntas"; // -> templates/preguntas.html
     }
 
-    /**
-     * Guardar nueva pregunta frecuente.
-     */
-    @PostMapping("/guardar")
-    public String guardarPregunta(@RequestParam("question") String question,
-            @RequestParam("answer") String answer,
-            Model model) {
-        faqService.guardarPregunta(question, answer);
-        model.addAttribute("successMessage", "Pregunta registrada con éxito.");
-        return "redirect:/preguntas";
-    }
 }

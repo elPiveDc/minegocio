@@ -3,7 +3,6 @@ package com.minegocio.backend.service;
 import com.minegocio.backend.entity.Faq;
 import com.minegocio.backend.repository.FaqRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -45,12 +44,6 @@ public class FaqService {
         return faqRepository.searchLike(original);
     }
 
-    @Transactional
-    public Faq guardarPregunta(String question, String answer) {
-        Faq f = new Faq(question, answer);
-        return faqRepository.save(f);
-    }
-
     /**
      * Sanitiza el término para usar en MATCH ... AGAINST:
      * - reemplaza caracteres no alfanuméricos por espacios
@@ -65,4 +58,21 @@ public class FaqService {
         // Compacta múltiples espacios y trim
         return step1.replaceAll("\\s+", " ").trim();
     }
+
+    public Faq guardar(Faq faq) {
+        return faqRepository.save(faq);
+    }
+
+    public List<Faq> obtenerTodas() {
+        return faqRepository.findAll();
+    }
+
+    public void eliminarPregunta(Integer id) {
+        faqRepository.deleteById(id);
+    }
+
+    public Faq obtenerPorId(Integer id) {
+        return faqRepository.findById(id).orElseThrow(() -> new RuntimeException("FAQ no encontrada: " + id));
+    }
+
 }
