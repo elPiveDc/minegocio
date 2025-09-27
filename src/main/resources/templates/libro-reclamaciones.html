@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>MiNegocio - Libro de Reclamaciones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="d-flex flex-column min-vh-100 bg-light">
+    <!-- Header -->
+    <div th:replace="fragments/header :: header"></div>
+
+    <main class="flex-grow-1">
+      <div class="container py-5">
+        <!-- Título -->
+        <div class="text-center mb-4">
+          <h1 class="fw-bold">LIBRO DE RECLAMACIONES</h1>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-12 col-lg-8">
+            <div class="card shadow-lg border-0">
+              <div class="card-body p-4">
+                <div class="text-center mb-4">
+                  <img
+                    src="https://www.munisanjeronimocusco.gob.pe/wp-content/uploads/2023/07/libro-de-reclamaciones.jpg.webp"
+                    alt="Libro de Reclamaciones"
+                    class="img-fluid rounded"
+                  />
+                </div>
+
+                <!-- Formulario -->
+                <form id="consultaForm" novalidate>
+                  <h5 class="mb-3">Datos del Usuario</h5>
+
+                  <div class="mb-3">
+                    <label for="usuario" class="form-label"
+                      >Nombre completo *</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="usuario"
+                      placeholder="Ej. Juan Pérez"
+                      required
+                    />
+                    <div class="invalid-feedback">
+                      Por favor, ingrese su nombre completo.
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="email" class="form-label"
+                      >Correo electrónico *</label
+                    >
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="email"
+                      placeholder="ejemplo@correo.com"
+                      required
+                    />
+                    <div class="invalid-feedback">
+                      Ingrese un correo válido.
+                    </div>
+                  </div>
+
+                  <h5 class="mt-4">Detalle de la Consulta</h5>
+
+                  <div class="mb-3">
+                    <label for="tipoConsulta" class="form-label"
+                      >Tipo de consulta *</label
+                    >
+                    <select class="form-select" id="tipoConsulta" required>
+                      <option value="" disabled selected>
+                        Seleccione una opción
+                      </option>
+                      <option value="consulta">Consulta de Datos</option>
+                      <option value="actualizacion">
+                        Actualización de Datos
+                      </option>
+                      <option value="error">Reporte de Error</option>
+                      <option value="otro">Otro</option>
+                    </select>
+                    <div class="invalid-feedback">
+                      Seleccione un tipo de consulta.
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="descripcion" class="form-label"
+                      >Descripción de la consulta *</label
+                    >
+                    <textarea
+                      class="form-control"
+                      id="descripcion"
+                      rows="4"
+                      placeholder="Describa aquí su consulta o problema..."
+                      required
+                    ></textarea>
+                    <div class="invalid-feedback">
+                      Este campo es obligatorio.
+                    </div>
+                  </div>
+
+                  <div class="form-check mb-3">
+                    <input
+                      class="form-check-input"
+                      type="checkbox"
+                      id="terminos"
+                      required
+                    />
+                    <label class="form-check-label" for="terminos">
+                      Acepto los términos y condiciones.
+                    </label>
+                    <div class="invalid-feedback">
+                      Debe aceptar los términos y condiciones.
+                    </div>
+                  </div>
+
+                  <button type="submit" class="btn btn-primary w-100">
+                    Enviar Consulta
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <div th:replace="fragments/footer :: footer"></div>
+
+    <!-- Botón WhatsApp flotante -->
+    <a
+      href="https://api.whatsapp.com/send?phone=51912718680&text=Hola,%20quisiera%20consultar%20sobre%20el%20sistema%20de%20base%20de%20datos."
+      class="btn btn-success rounded-circle shadow-lg position-fixed d-flex align-items-center justify-content-center"
+      style="width: 60px; height: 60px; bottom: 40px; right: 40px; z-index: 100"
+      target="_blank"
+      aria-label="Contactar por WhatsApp"
+    >
+      <i class="bi bi-whatsapp fs-2"></i>
+    </a>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Validación simple sin conexion real-->
+    <script>
+      (() => {
+        "use strict";
+        const form = document.getElementById("consultaForm");
+        form.addEventListener("submit", (event) => {
+          if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+          } else {
+            event.preventDefault();
+            alert("Consulta enviada con éxito ");
+            form.reset();
+          }
+          form.classList.add("was-validated");
+        });
+      })();
+    </script>
+  </body>
+</html>
