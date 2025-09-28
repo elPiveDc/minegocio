@@ -1,18 +1,33 @@
 package com.minegocio.backend.controller;
 
+import com.minegocio.backend.dto.UsuarioSesion;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class HomeController {
 
     @GetMapping("/")
-    public String index() {
+    public String index(HttpSession session, Model model) {
+
+        UsuarioSesion usuario = (UsuarioSesion) session.getAttribute("usuarioLogueado");
+
+        if (usuario != null) {
+            // Elimina el usuario de la sesión
+            session.removeAttribute("usuarioLogueado");
+
+            // Sobrescribe en el modelo para que el header no lo muestre
+            model.addAttribute("usuarioSesion", null);
+
+            // Envía el mensaje
+            model.addAttribute("mensajeCierre", "Tu sesión ha sido cerrada");
+        }
 
         return "index";
     }
 
-    // Enlaces (header)
     @GetMapping("/registro")
     public String registro() {
         return "registro";
@@ -22,22 +37,4 @@ public class HomeController {
     public String login() {
         return "login";
     }
-
-    // Páginas de enlaces rápidos (footer)
-
-    @GetMapping("/libro-reclamaciones")
-    public String libroReclamaciones() {
-        return "libro-reclamaciones";
-    }
-
-    @GetMapping("/terminos")
-    public String terminos() {
-        return "terminos";
-    }
-
-    @GetMapping("/privacidad")
-    public String privacidad() {
-        return "privacidad";
-    }
-
 }

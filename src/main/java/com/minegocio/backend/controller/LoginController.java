@@ -24,6 +24,7 @@ public class LoginController {
         try {
             // Validar usuario en la BD de la franquicia
             UsuarioSesion user = loginService.autenticar(usuario, password, franquicia);
+            user.setfranquicia(franquicia);
 
             // Guardar usuario en sesión
             session.setAttribute("usuarioLogueado", user);
