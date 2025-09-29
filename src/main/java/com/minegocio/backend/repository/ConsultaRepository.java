@@ -26,4 +26,5 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Integer> {
 
     // Buscar todas las consultas de un usuario según tipo
     List<Consulta> findByUsuarioAndTipoConsulta(Usuario usuario, Consulta.TipoConsulta tipoConsulta);
+
 }

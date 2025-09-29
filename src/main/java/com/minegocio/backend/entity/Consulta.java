@@ -28,6 +28,9 @@ public class Consulta {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 
+    @Column(name = "respuesta", nullable = true, columnDefinition = "TEXT")
+    private String respuesta;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private EstadoConsulta estado = EstadoConsulta.PENDIENTE;

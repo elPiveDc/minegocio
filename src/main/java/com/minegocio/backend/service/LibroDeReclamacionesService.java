@@ -71,4 +71,22 @@ public class LibroDeReclamacionesService {
             return "El correo no está registrado en usuarios ni en consultas.";
         }
     }
+
+    // mas metodos para admin:
+    public List<Consulta> obtenerTodasConsultas() {
+        return consultaRepository.findAll();
+    }
+
+    public Consulta obtenerPorId(int id) {
+        return consultaRepository.findById(id).orElse(null);
+    }
+
+    public void eliminarConsulta(int id) {
+        consultaRepository.deleteById(id);
+    }
+
+    public void guardar(Consulta consulta) {
+        consultaRepository.save(consulta);
+    }
+
 }
