@@ -1,40 +1,26 @@
 package com.minegocio.backend.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class UsuarioSesion {
     private Integer idUsuario;
     private String nombre;
     private String correo;
     private boolean esAdmin;
     private String franquicia;
+    private ConexionBdProjection conexion;
 
-    public UsuarioSesion(Integer idUsuario, String nombre, String correo, boolean esAdmin) {
+    public UsuarioSesion(Integer idUsuario, String nombre, String correo, boolean esAdmin,
+            ConexionBdProjection conexion, String franquicia) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.correo = correo;
         this.esAdmin = esAdmin;
+        this.conexion = conexion;
+        this.franquicia = franquicia;
     }
 
-    public Integer getIdUsuario() {
-        return idUsuario;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public boolean isEsAdmin() {
-        return esAdmin;
-    }
-
-    public String getfranquicia() {
-        return franquicia;
-    }
-
-    public void setfranquicia(String Franquicia) {
-        this.franquicia = Franquicia;
-    }
 }

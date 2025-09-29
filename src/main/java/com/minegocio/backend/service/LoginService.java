@@ -19,7 +19,7 @@ public class LoginService {
     public LoginService(BaseDatosFranquiciaRepository baseDatosFranquiciaRepository) {
         this.baseDatosFranquiciaRepository = baseDatosFranquiciaRepository;
     }
-    
+
     public UsuarioSesion autenticar(String correo, String password, String nombreFranquicia) {
         ConexionBdProjection datosConexion = baseDatosFranquiciaRepository
                 .obtenerDatosConexionPorNombreFranquicia(nombreFranquicia)
@@ -49,7 +49,7 @@ public class LoginService {
                     throw new AutenticacionException("Contraseña incorrecta");
                 }
 
-                return new UsuarioSesion(idUsuario, nombre, correoDb, esAdmin);
+                return new UsuarioSesion(idUsuario, nombre, correoDb, esAdmin, datosConexion, nombreFranquicia);
             }
         } catch (AutenticacionException e) {
             throw e; // re-lanza las excepciones de autenticación tal cual

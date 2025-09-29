@@ -22,6 +22,6 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(AutenticacionException.class)
     public String manejarAutenticacion(AutenticacionException ex, Model model) {
         model.addAttribute("errorMensaje", ex.getMessage());
-        return "login"; // 👈 login.html
+        return "login"; // login.html
     }
 }

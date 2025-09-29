@@ -1,8 +1,13 @@
 package com.minegocio.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "objetos_bd_franquicia")
 public class ObjetoBdFranquicia {
@@ -26,16 +31,6 @@ public class ObjetoBdFranquicia {
     @Column(name = "es_tabla_usuarios", nullable = false)
     private Boolean esTablaUsuarios = false;
 
-    /**
-     * Guardamos la definición de columnas en formato JSON.
-     * Ejemplo:
-     * [
-     * {"nombre": "id", "tipo": "INT", "pk": true},
-     * {"nombre": "nombre", "tipo": "VARCHAR(100)"},
-     * {"nombre": "correo", "tipo": "VARCHAR(100)"}
-     * ]
-     */
-
     @Column(name = "columnas", columnDefinition = "JSON", nullable = false)
     private String columnas;
 
@@ -56,71 +51,5 @@ public class ObjetoBdFranquicia {
         this.baseDatosFranquicia = baseDatosFranquicia;
         this.nombreTabla = nombreTabla;
         this.columnas = columnasJson;
-    }
-
-    // ==== Getters & Setters ====
-
-    public Integer getIdObjeto() {
-        return idObjeto;
-    }
-
-    public void setIdObjeto(Integer idObjeto) {
-        this.idObjeto = idObjeto;
-    }
-
-    public BaseDatosFranquicia getBaseDatosFranquicia() {
-        return baseDatosFranquicia;
-    }
-
-    public void setBaseDatosFranquicia(BaseDatosFranquicia baseDatosFranquicia) {
-        this.baseDatosFranquicia = baseDatosFranquicia;
-    }
-
-    public String getNombreTabla() {
-        return nombreTabla;
-    }
-
-    public void setNombreTabla(String nombreTabla) {
-        this.nombreTabla = nombreTabla;
-    }
-
-    public TipoObjeto getTipoObjeto() {
-        return tipoObjeto;
-    }
-
-    public void setTipoObjeto(TipoObjeto tipoObjeto) {
-        this.tipoObjeto = tipoObjeto;
-    }
-
-    public Boolean getEsTablaUsuarios() {
-        return esTablaUsuarios;
-    }
-
-    public void setEsTablaUsuarios(Boolean esTablaUsuarios) {
-        this.esTablaUsuarios = esTablaUsuarios;
-    }
-
-    public String getColumnas() {
-        return columnas;
-    }
-
-    public void setColumnas(String columnas) {
-        this.columnas = columnas;
-    }
-
-    public LocalDateTime getFechaCreacion() {
-        return fechaCreacion;
-    }
-
-    public void setFechaCreacion(LocalDateTime fechaCreacion) {
-        this.fechaCreacion = fechaCreacion;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
     }
 }

@@ -10,14 +10,15 @@ import java.util.Optional;
 
 public interface BaseDatosFranquiciaRepository extends JpaRepository<BaseDatosFranquicia, Integer> {
 
-        @Query("""
-                        SELECT b.urlConexion AS urlConexion,
-                               b.usuarioConexion AS usuarioConexion,
-                               b.passConexionHash AS passConexionHash
-                        FROM BaseDatosFranquicia b
-                        JOIN b.franquicia f
-                        WHERE f.nombreFranquicia = :nombreFranquicia
-                        """)
-        Optional<ConexionBdProjection> obtenerDatosConexionPorNombreFranquicia(
-                        @Param("nombreFranquicia") String nombreFranquicia);
+       @Query("""
+                     SELECT b.idBd AS idBd,
+                            b.urlConexion AS urlConexion,
+                            b.usuarioConexion AS usuarioConexion,
+                            b.passConexionHash AS passConexionHash
+                     FROM BaseDatosFranquicia b
+                     JOIN b.franquicia f
+                     WHERE f.nombreFranquicia = :nombreFranquicia
+                     """)
+       Optional<ConexionBdProjection> obtenerDatosConexionPorNombreFranquicia(
+                     @Param("nombreFranquicia") String nombreFranquicia);
 }
