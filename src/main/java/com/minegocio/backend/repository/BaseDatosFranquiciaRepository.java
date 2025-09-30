@@ -21,4 +21,14 @@ public interface BaseDatosFranquiciaRepository extends JpaRepository<BaseDatosFr
                      """)
        Optional<ConexionBdProjection> obtenerDatosConexionPorNombreFranquicia(
                      @Param("nombreFranquicia") String nombreFranquicia);
+
+       @Query("""
+                      SELECT b
+                      FROM BaseDatosFranquicia b
+                      JOIN b.franquicia f
+                      WHERE f.nombreFranquicia = :nombreFranquicia
+                     """)
+       BaseDatosFranquicia ObtenerBDporNombreFranquicia(
+                     @Param("nombreFranquicia") String nombreFranquicia);
+
 }
