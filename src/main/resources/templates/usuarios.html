@@ -22,6 +22,7 @@
       <div class="container py-5">
         <!-- Nav Basico -->
         <div th:replace="fragments/navdashboard :: div"></div>
+
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h2>Usuarios</h2>
 
@@ -33,6 +34,7 @@
             <i class="bi bi-person-plus"></i> Agregar Usuario
           </button>
         </div>
+
         <!-- Tabla de usuarios -->
         <div class="table-responsive">
           <table class="table table-striped table-hover">
@@ -46,44 +48,45 @@
               </tr>
             </thead>
             <tbody id="tablaUsuarios">
-              <!-- Datos simulados -->
-              <tr>
-                <td>1</td>
-                <td>Ana Torres</td>
-                <td>ana@example.com</td>
-                <td>2025-08-18</td>
+              <!-- Iteramos sobre listaUsuarios -->
+              <tr th:each="usuario : ${usuarios}">
+                <!-- Asumimos que la consulta devuelve columnas en orden: id, nombre, correo, fecha_registro -->
+                <td th:text="${usuario[0]}"></td>
+                <td th:text="${usuario[1]}"></td>
+                <td th:text="${usuario[2]}"></td>
+                <td th:text="${usuario[5]}"></td>
                 <td>
+                  <!-- Botón editar: abre modal con valores cargados -->
                   <button
                     class="btn btn-sm btn-warning"
                     data-bs-toggle="modal"
                     data-bs-target="#modalEditar"
+                    th:attr="data-id=${usuario[0]}, data-nombre=${usuario[1]}, data-correo=${usuario[2]}"
                   >
                     Editar
                   </button>
-                  <button class="btn btn-sm btn-danger">Eliminar</button>
-                </td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Carlos Pérez</td>
-                <td>carlos@example.com</td>
-                <td>2025-08-10</td>
-                <td>
-                  <button
-                    class="btn btn-sm btn-warning"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalEditar"
+                  <!-- Form eliminar -->
+                  <form
+                    th:action="@{'/dashboard/usuarios/' + ${usuario[0]} + '/eliminar'}"
+                    method="post"
+                    class="d-inline"
                   >
-                    Editar
-                  </button>
-                  <button class="btn btn-sm btn-danger">Eliminar</button>
+                    <button
+                      type="submit"
+                      class="btn btn-sm btn-danger"
+                      onclick="return confirm('¿Seguro que deseas eliminar este usuario?')"
+                    >
+                      Eliminar
+                    </button>
+                  </form>
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-      <!-- Agregar Usuario -->
+
+      <!-- Modal Agregar Usuario -->
       <div
         class="modal fade"
         id="modalAgregar"
@@ -100,81 +103,101 @@
                 data-bs-dismiss="modal"
               ></button>
             </div>
-            <div class="modal-body">
-              <form>
+            <form th:action="@{/dashboard/usuarios}" method="post">
+              <div class="modal-body">
                 <div class="mb-3">
-                  <label>Nombre</label>
+                  <label>Nombre Completo</label>
                   <input
                     type="text"
+                    name="nombre"
                     class="form-control"
                     placeholder="Nombre de usuario"
+                    required
                   />
                 </div>
                 <div class="mb-3">
                   <label>Correo</label>
                   <input
                     type="email"
+                    name="correo"
                     class="form-control"
                     placeholder="correo@ejemplo.com"
+                    required
                   />
                 </div>
                 <div class="mb-3">
                   <label>Contraseña</label>
                   <input
                     type="password"
+                    name="password"
                     class="form-control"
                     placeholder="******"
+                    required
                   />
                 </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-secondary" data-bs-dismiss="modal">
-                Cancelar
-              </button>
-              <button class="btn btn-primary">Guardar</button>
-            </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  type="button"
+                >
+                  Cancelar
+                </button>
+                <button class="btn btn-primary" type="submit">Guardar</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
+
       <!-- Modal Editar Usuario -->
       <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Editar Usuario</h5>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <form>
+            <form id="formEditarUsuario" method="post">
+              <div class="modal-header">
+                <h5 class="modal-title">Editar Usuario</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <input type="hidden" id="editarId" name="id" />
                 <div class="mb-3">
                   <label>Nombre</label>
                   <input
                     type="text"
+                    id="editarNombre"
+                    name="nombre"
                     class="form-control"
-                    value="Nuevo nombre"
                   />
                 </div>
                 <div class="mb-3">
                   <label>Correo</label>
                   <input
                     type="email"
+                    id="editarCorreo"
+                    name="correo"
                     class="form-control"
-                    value="correo@ejemplo.com"
                   />
                 </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-secondary" data-bs-dismiss="modal">
-                Cancelar
-              </button>
-              <button class="btn btn-success">Actualizar</button>
-            </div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                  type="button"
+                >
+                  Cancelar
+                </button>
+                <button class="btn btn-success" type="submit">
+                  Actualizar
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -182,8 +205,8 @@
 
     <!-- Footer -->
     <div th:replace="fragments/footer :: footer"></div>
-    <!-- Scripts -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/dashboard.js}"></script>
   </body>
 </html>

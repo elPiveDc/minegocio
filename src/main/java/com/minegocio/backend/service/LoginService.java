@@ -5,6 +5,7 @@ import com.minegocio.backend.dto.UsuarioSesion;
 import com.minegocio.backend.repository.BaseDatosFranquiciaRepository;
 import com.minegocio.backend.util.PasswordUtil;
 import org.springframework.stereotype.Service;
+import com.minegocio.backend.exception.AutenticacionException;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -20,24 +21,22 @@ public class LoginService {
     }
 
     public UsuarioSesion autenticar(String correo, String password, String nombreFranquicia) {
-        // 1. Obtener credenciales de conexión desde la BD central
         ConexionBdProjection datosConexion = baseDatosFranquiciaRepository
                 .obtenerDatosConexionPorNombreFranquicia(nombreFranquicia)
-                .orElseThrow(() -> new IllegalArgumentException("Franquicia no encontrada"));
+                .orElseThrow(() -> new AutenticacionException("Franquicia no encontrada"));
 
         try (Connection conn = DriverManager.getConnection(
                 datosConexion.getUrlConexion(),
                 datosConexion.getUsuarioConexion(),
                 datosConexion.getPassConexionHash())) {
 
-            // 2. Consultar al usuario en la BD de la franquicia
             String sql = "SELECT id_usuario, nombre, correo, password_hash, es_admin FROM usuarios WHERE correo = ?";
             try (PreparedStatement ps = conn.prepareStatement(sql)) {
                 ps.setString(1, correo);
                 var rs = ps.executeQuery();
 
                 if (!rs.next()) {
-                    throw new IllegalArgumentException("Usuario no encontrado en la franquicia");
+                    throw new AutenticacionException("Usuario no encontrado en la franquicia");
                 }
 
                 Integer idUsuario = rs.getInt("id_usuario");
@@ -46,17 +45,17 @@ public class LoginService {
                 String passwordHash = rs.getString("password_hash");
                 boolean esAdmin = rs.getBoolean("es_admin");
 
-                // 3. Validar contraseña
                 if (!PasswordUtil.checkPassword(password, passwordHash)) {
-                    throw new IllegalArgumentException("Contraseña incorrecta");
+                    throw new AutenticacionException("Contraseña incorrecta");
                 }
 
-                // 4. Retornar el usuario autenticado con rol admin o no
-                return new UsuarioSesion(idUsuario, nombre, correoDb, esAdmin);
+                return new UsuarioSesion(idUsuario, nombre, correoDb, esAdmin, datosConexion, nombreFranquicia);
             }
+        } catch (AutenticacionException e) {
+            throw e; // re-lanza las excepciones de autenticación tal cual
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Error autenticando en la BD de la franquicia", e);
+            throw new AutenticacionException("Error autenticando en la BD de la franquicia: " + e.getMessage());
         }
     }
+
 }

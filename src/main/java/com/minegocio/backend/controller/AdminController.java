@@ -1,9 +1,13 @@
 package com.minegocio.backend.controller;
 
+import com.minegocio.backend.entity.Consulta;
 import com.minegocio.backend.entity.Documento;
 import com.minegocio.backend.entity.Faq;
+import com.minegocio.backend.entity.Consulta.EstadoConsulta;
 import com.minegocio.backend.service.DocumentoService;
 import com.minegocio.backend.service.FaqService;
+import com.minegocio.backend.service.LibroDeReclamacionesService;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,10 +22,14 @@ public class AdminController {
 
     private final DocumentoService documentoService;
     private final FaqService faqService;
+    private final LibroDeReclamacionesService libroDeReclamacionesService;
 
-    public AdminController(DocumentoService documentoService, FaqService faqService) {
+    public AdminController(DocumentoService documentoService,
+            FaqService faqService,
+            LibroDeReclamacionesService libroDeReclamacionesService) {
         this.documentoService = documentoService;
         this.faqService = faqService;
+        this.libroDeReclamacionesService = libroDeReclamacionesService;
     }
 
     /**
@@ -32,26 +40,32 @@ public class AdminController {
     public String adminPage(@RequestParam(name = "section", required = false, defaultValue = "faqs") String section,
             Model model,
             @ModelAttribute("faqForm") Faq faqFlash,
-            @ModelAttribute("documentoForm") Documento docFlash) {
+            @ModelAttribute("documentoForm") Documento docFlash,
+            @ModelAttribute("consultaForm") Consulta consultaFlash) {
 
-        // listas para las dos secciones
+        // seccion actual
         model.addAttribute("section", section);
+
+        // listas compartidas
         model.addAttribute("faqs", faqService.obtenerTodas());
         model.addAttribute("documentos", documentoService.obtenerTodos());
+        model.addAttribute("consultas", libroDeReclamacionesService.obtenerTodasConsultas());
 
-        // formularios: si vienen en flash (edición), los usamos; si no, ponemos
-        // instancias por defecto
-        if (faqFlash == null || faqFlash.getQuestion() == null && faqFlash.getAnswer() == null) {
-            model.addAttribute("faqForm", new Faq());
-        } else {
-            model.addAttribute("faqForm", faqFlash);
-        }
+        // formularios
+        model.addAttribute("faqForm",
+                (faqFlash == null || (faqFlash.getQuestion() == null && faqFlash.getAnswer() == null))
+                        ? new Faq()
+                        : faqFlash);
 
-        if (docFlash == null || docFlash.getTitulo() == null) {
-            model.addAttribute("documentoForm", new Documento());
-        } else {
-            model.addAttribute("documentoForm", docFlash);
-        }
+        model.addAttribute("documentoForm",
+                (docFlash == null || docFlash.getTitulo() == null)
+                        ? new Documento()
+                        : docFlash);
+
+        model.addAttribute("consultaForm",
+                (consultaFlash == null || consultaFlash.getDescripcion() == null)
+                        ? new Consulta()
+                        : consultaFlash);
 
         return "admin";
     }
@@ -148,4 +162,29 @@ public class AdminController {
         ra.addFlashAttribute("successMessage", "Documento eliminado.");
         return "redirect:/admin?section=documentos";
     }
+
+    // -------------------------
+    // LIBRO DE RECLAMACIONES CRUD
+    // -------------------------
+
+    // Contestar una consulta del libro de reclamaciones
+    @PostMapping("/libro-reclamaciones/contestar")
+    public String contestarConsulta(@RequestParam int id,
+            @RequestParam String respuesta,
+            RedirectAttributes ra) {
+        Consulta consulta = libroDeReclamacionesService.obtenerPorId(id);
+        consulta.setRespuesta(respuesta);
+        consulta.setEstado(EstadoConsulta.CERRADO);
+        libroDeReclamacionesService.guardar(consulta);
+        ra.addFlashAttribute("successMessage", "Consulta contestada correctamente.");
+        return "redirect:/admin?section=consultas";
+    }
+
+    @GetMapping("/libro-reclamaciones/contestar/{id}")
+    public String mostrarFormularioRespuesta(@PathVariable int id, RedirectAttributes ra) {
+        Consulta consulta = libroDeReclamacionesService.obtenerPorId(id);
+        ra.addFlashAttribute("consultaForm", consulta);
+        return "redirect:/admin?section=consultas";
+    }
+
 }

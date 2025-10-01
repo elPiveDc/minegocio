@@ -39,10 +39,17 @@
             </a>
             <a
               th:href="@{/admin(section='documentos')}"
-              class="btn btn-outline-primary"
+              class="btn btn-outline-primary me-2"
               th:classappend="${section=='documentos'} ? ' active'"
             >
               <i class="bi bi-file-earmark"></i> Documentos
+            </a>
+            <a
+              th:href="@{/admin(section='consultas')}"
+              class="btn btn-outline-primary"
+              th:classappend="${section=='consultas'} ? ' active'"
+            >
+              <i class="bi bi-journal-text"></i> Consultas
             </a>
           </div>
         </div>
@@ -231,6 +238,92 @@
                     <tr th:if="${#lists.isEmpty(documentos)}">
                       <td colspan="6" class="text-center text-muted">
                         No hay documentos.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección Consultas -->
+          <div th:case="'consultas'">
+            <div class="card mb-4">
+              <div class="card-body">
+                <h5>Responder Consulta</h5>
+                <form
+                  th:action="@{/admin/libro-reclamaciones/contestar}"
+                  method="post"
+                  class="row g-2"
+                >
+                  <input
+                    type="hidden"
+                    name="id"
+                    th:value="${consultaForm.idConsulta}"
+                  />
+                  <div class="col-12">
+                    <label class="form-label">Descripción</label>
+                    <textarea
+                      class="form-control"
+                      rows="3"
+                      disabled
+                      th:text="${consultaForm.descripcion}"
+                    ></textarea>
+                  </div>
+                  <div class="col-12">
+                    <label class="form-label">Respuesta</label>
+                    <textarea
+                      name="respuesta"
+                      class="form-control"
+                      rows="4"
+                      placeholder="Escribe la respuesta aquí..."
+                      required
+                      th:text="${consultaForm.respuesta}"
+                    ></textarea>
+                  </div>
+                  <div class="col-12 text-end">
+                    <button class="btn btn-primary">Guardar Respuesta</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Listado de Consultas</h5>
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Usuario</th>
+                      <th>Tipo</th>
+                      <th>Descripción</th>
+                      <th>Respuesta</th>
+                      <th>Estado</th>
+                      <th>Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr th:each="c : ${consultas}">
+                      <td th:text="${c.idConsulta}"></td>
+                      <td th:text="${c.usuario.idUsuario}"></td>
+                      <td th:text="${c.tipoConsulta}"></td>
+                      <td th:text="${c.descripcion}"></td>
+                      <td
+                        th:text="${c.respuesta != null ? c.respuesta : 'Pendiente'}"
+                      ></td>
+                      <td th:text="${c.estado}"></td>
+                      <td>
+                        <a
+                          th:href="@{/admin/libro-reclamaciones/contestar/{id}(id=${c.idConsulta})}"
+                          class="btn btn-sm btn-outline-secondary"
+                          >Responder</a
+                        >
+                      </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(consultas)}">
+                      <td colspan="7" class="text-center text-muted">
+                        No hay consultas.
                       </td>
                     </tr>
                   </tbody>

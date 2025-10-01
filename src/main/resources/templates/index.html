@@ -18,6 +18,10 @@
     <!-- Header -->
     <div th:replace="fragments/header :: header"></div>
 
+    <div th:if="${mensajeCierre}" class="alert alert-info text-center mt-3">
+      <span th:text="${mensajeCierre}"></span>
+    </div>
+
     <main class="flex-grow-1">
       <div class="container py-4">
         <!-- Título y descripción -->
