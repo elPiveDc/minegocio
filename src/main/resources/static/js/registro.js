@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Paso 3: nombre de la base de datos
     if (index === 2) {
-      const bdInput = document.querySelector("input[name='bd']");
+      const bdInput = document.querySelector("input[name='nombreBd']");
       if (bdInput.value.trim() === "") {
         mostrarError(bdInput, "El nombre de la base de datos es obligatorio.");
         valido = false;
@@ -116,6 +116,7 @@ document.addEventListener("DOMContentLoaded", function () {
         limpiarError(bdInput);
       }
     }
+
 
     if (valido) {
       carousel.next(); // avanzar solo si pasa las validaciones

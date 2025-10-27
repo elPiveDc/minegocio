@@ -27,12 +27,7 @@ public class HomeController {
 
         return "index";
     }
-
-    @GetMapping("/registro")
-    public String registro() {
-        return "registro";
-    }
-
+    
     @GetMapping("/login")
     public String login() {
         return "login";

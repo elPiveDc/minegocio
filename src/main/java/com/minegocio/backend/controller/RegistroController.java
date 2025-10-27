@@ -1,10 +1,12 @@
 package com.minegocio.backend.controller;
 
+import com.minegocio.backend.dto.UsuarioCreacion;
 import com.minegocio.backend.service.RegistroService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class RegistroController {
@@ -15,21 +17,28 @@ public class RegistroController {
         this.registroService = registroService;
     }
 
-    @PostMapping("/registro")
-    public String registrarUsuario(
-            @RequestParam String nombreUsuario,
-            @RequestParam String correo,
-            @RequestParam String password,
-            @RequestParam String nombreFranquicia,
-            @RequestParam(name = "bd") String nombreBd,
-            Model model) {
+    // 🔹 Muestra el formulario de registro
+    @GetMapping("/registro")
+    public String mostrarFormularioRegistro(Model model) {
+        // Crea un objeto vacío para vincular con el formulario
+        model.addAttribute("usuario", new UsuarioCreacion());
+        return "registro";
+    }
 
+    // 🔹 Procesa el envío del formulario
+    @PostMapping("/registro")
+    public String registrarUsuario(@ModelAttribute("usuario") UsuarioCreacion dto, Model model) {
         try {
             registroService.registrarUsuarioConFranquicia(
-                    nombreUsuario, correo, password, nombreFranquicia, nombreBd);
+                    dto.getNombreUsuario(),
+                    dto.getCorreo(),
+                    dto.getPassword(),
+                    dto.getNombreFranquicia(),
+                    dto.getNombreBd()
+            );
 
             model.addAttribute("successMessage", "Registro exitoso. Ahora puedes iniciar sesión.");
-            return "login";
+            return "login"; // Redirige a login.html
 
         } catch (IllegalArgumentException e) {
             model.addAttribute("errorMessage", e.getMessage());
@@ -37,11 +46,8 @@ public class RegistroController {
             model.addAttribute("errorMessage", "Error inesperado, por favor intenta de nuevo.");
         }
 
-        model.addAttribute("nombreUsuario", nombreUsuario);
-        model.addAttribute("correo", correo);
-        model.addAttribute("nombreFranquicia", nombreFranquicia);
-        model.addAttribute("bd", nombreBd);
-
+        // Mantiene los datos ingresados si ocurre un error
+        model.addAttribute("usuario", dto);
         return "registro";
     }
 }
