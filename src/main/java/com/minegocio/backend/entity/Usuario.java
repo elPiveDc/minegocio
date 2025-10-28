@@ -1,12 +1,22 @@
 package com.minegocio.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "usuarios")
+@Table(
+    name = "usuarios",
+    indexes = {
+        @Index(name = "idx_usuarios_correo", columnList = "correo")
+    }
+)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Usuario {
 
     @Id
@@ -27,80 +37,33 @@ public class Usuario {
     @Column(nullable = false, length = 20)
     private EstadoUsuario estado = EstadoUsuario.ACTIVO;
 
-    @Column(name = "fecha_registro", nullable = false)
+    @Column(name = "fecha_registro", nullable = false, updatable = false)
     private LocalDateTime fechaRegistro = LocalDateTime.now();
 
     // Relación 1:N con Franquicia
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(
+        mappedBy = "usuario",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true,
+        fetch = FetchType.LAZY
+    )
+    @ToString.Exclude // evita recursión infinita en Lombok
+    @Builder.Default
     private List<Franquicia> franquicias = new ArrayList<>();
 
+    // === ENUM ===
     public enum EstadoUsuario {
         ACTIVO, INACTIVO, BLOQUEADO
     }
 
-    public Usuario() {
+    // === Métodos auxiliares ===
+    public void addFranquicia(Franquicia franquicia) {
+        franquicias.add(franquicia);
+        franquicia.setUsuario(this);
     }
 
-    public Usuario(String nombre, String correo, String passwordHash) {
-        this.nombre = nombre;
-        this.correo = correo;
-        this.passwordHash = passwordHash;
-    }
-
-    // ==== Getters & Setters ====
-    public Integer getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(Integer idUsuario) {
-        this.idUsuario = idUsuario;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getCorreo() {
-        return correo;
-    }
-
-    public void setCorreo(String correo) {
-        this.correo = correo;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public EstadoUsuario getEstado() {
-        return estado;
-    }
-
-    public void setEstado(EstadoUsuario estado) {
-        this.estado = estado;
-    }
-
-    public LocalDateTime getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-
-    public List<Franquicia> getFranquicias() {
-        return franquicias;
-    }
-
-    public void setFranquicias(List<Franquicia> franquicias) {
-        this.franquicias = franquicias;
+    public void removeFranquicia(Franquicia franquicia) {
+        franquicias.remove(franquicia);
+        franquicia.setUsuario(null);
     }
 }

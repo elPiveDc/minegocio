@@ -1,16 +1,24 @@
 package com.minegocio.backend.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
+import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "consultas")
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Consulta {
+
+    public Consulta(Usuario usuario, TipoConsulta tipoConsulta, String descripcion) {
+        this.usuario = usuario;
+        this.tipoConsulta = tipoConsulta;
+        this.descripcion = descripcion;
+        this.estado = EstadoConsulta.PENDIENTE;
+        this.fechaCreacion = LocalDateTime.now();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,20 +31,23 @@ public class Consulta {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_consulta", nullable = false, length = 20)
-    private TipoConsulta tipoConsulta;
+    private TipoConsulta tipoConsulta = TipoConsulta.CONSULTA;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String descripcion;
 
-    @Column(name = "respuesta", nullable = true, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String respuesta;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     private EstadoConsulta estado = EstadoConsulta.PENDIENTE;
 
-    @Column(name = "fecha_creacion", nullable = false)
-    private LocalDateTime fechaCreacion = LocalDateTime.now();
+    @Column(name = "fecha_creacion", nullable = false, updatable = false)
+    private LocalDateTime fechaCreacion;
+
+    @Column(name = "fecha_respuesta")
+    private LocalDateTime fechaRespuesta;
 
     // ==== ENUMS ====
     public enum TipoConsulta {
@@ -47,13 +58,17 @@ public class Consulta {
         PENDIENTE, EN_PROCESO, RESUELTO, CERRADO
     }
 
-    // ==== CONSTRUCTORES ====
-    public Consulta() {
+    // ==== Auditoría ====
+    @PrePersist
+    protected void onCreate() {
+        this.fechaCreacion = LocalDateTime.now();
     }
 
-    public Consulta(Usuario usuario, TipoConsulta tipoConsulta, String descripcion) {
-        this.usuario = usuario;
-        this.tipoConsulta = tipoConsulta;
-        this.descripcion = descripcion;
+    @PreUpdate
+    protected void onUpdate() {
+        if (this.respuesta != null && this.estado == EstadoConsulta.PENDIENTE) {
+            this.estado = EstadoConsulta.RESUELTO;
+            this.fechaRespuesta = LocalDateTime.now();
+        }
     }
 }
