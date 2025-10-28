@@ -77,7 +77,7 @@ public class RegistroService {
         // 5 se pasa el Nombre de la franquicia y la contraseña en base a su dimencion
         // para la creacion de las base de
         // datos, su suario y su asignacion de privilegios
-        String contraseñaBD = PasswordUtil.generarPasswordSegura(nombreFranquicia.length());
+        String contraseñaBD = PasswordUtil.generarPasswordSegura(nombreFranquicia.length() + 8);
         bd.setUrlConexion(conexionUtil.crearBaseDeDatos(nombreBd, nombreFranquicia, contraseñaBD));
         bd.setUsuarioConexion(nombreFranquicia);
         // se le pasa a la bdcentral el pasword de conexion
